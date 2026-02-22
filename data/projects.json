@@ -1,0 +1,6 @@
+{
+  "projects": [
+    {"id": "1", "name": "Portfolio Site", "description": "Personal portfolio", "tech": ["Next.js", "TypeScript"], "featured": true},
+    {"id": "2", "name": "API Server", "description": "REST API service", "tech": ["Node.js", "Express"], "featured": false}
+  ]
+}

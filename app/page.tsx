@@ -111,7 +111,7 @@ export default function Home() {
         </div>
 
         <div className="arrangement">
-          <div className="arrangement__alcove" aria-label="Selectable project arrangement">
+          <div className="arrangement__alcove" role="group" aria-label="Selectable project arrangement">
             <div className="alcove-surface" aria-hidden="true" />
             <div className="branch branch--main" aria-hidden="true" />
             <div className="branch branch--twig" aria-hidden="true" />
@@ -165,7 +165,7 @@ export default function Home() {
                 <p className="note-label">{selectedProject.featured ? "FEATURED WORK" : "SERVICE STUDY"}</p>
                 <h3>{selectedProject.name}</h3>
                 <p className="study-panel__description">{selectedProject.description}</p>
-                <div className="study-panel__tech" aria-label="Technologies">
+                <div className="study-panel__tech" role="group" aria-label="Technologies">
                   {selectedProject.tech.map((technology) => <span key={technology}>{technology}</span>)}
                 </div>
               </div>
@@ -192,7 +192,7 @@ export default function Home() {
               placeholder="Name, description, technology"
             />
           </label>
-          <div className="view-switch" aria-label="Project view">
+          <div className="view-switch" role="group" aria-label="Project view">
             <span>VIEW</span>
             <button type="button" className={viewMode === "all" ? "is-active" : ""} onClick={() => selectView("all")} aria-pressed={viewMode === "all"}>ALL</button>
             <button type="button" className={viewMode === "featured" ? "is-active" : ""} onClick={() => selectView("featured")} aria-pressed={viewMode === "featured"}>FEATURED</button>

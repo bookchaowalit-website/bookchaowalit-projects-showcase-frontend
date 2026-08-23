@@ -71,6 +71,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        {/* THESIS: project records become an open ikebana arrangement, refusing a dense directory. OWN-WORLD: plaster, pine, iris, bronze, open space, stems, and quiet editorial labels. STORY: enter the arrangement, select a study, search the archive, and use the read-only catalog handle. FIRST VIEWPORT: a quiet hero and public arrangement note lead into the open vessel and selected study. FORM: preserved ikebana world, candidate 3 of 7, seed b55e92bb. FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance */}
         <Analytics />
         <SpeedInsights />
         {children}

@@ -792,3 +792,20 @@ a:focus-visible {
     animation-iteration-count: 1 !important;
   }
 }
+
+:root {
+  --ink-soft: #4f554d;
+  --iris: #345b7f;
+  --bronze: #70502f;
+}
+
+.stem__label {
+  width: max-content;
+  display: block;
+  background: var(--plaster);
+  padding: 3px 5px;
+}
+
+.stem__label small {
+  display: inline-block;
+}

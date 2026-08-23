@@ -1,7 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+const tools = [
+  { name: 'get_all', description: 'Return the complete project index.', inputSchema: { type: 'object', properties: {} } },
+  { name: 'get_by_id', description: 'Open one project record by id.', inputSchema: { type: 'object', properties: { id: { type: 'string' } }, required: ['id'] } },
+  { name: 'search', description: 'Find records by a text query.', inputSchema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } },
+];
+
+export function GET() {
+  return NextResponse.json({
+    name: 'Projects Showcase',
+    version: '1.0.0',
+    description: 'A read-only catalog of projects from the Book Dev boundary.',
+    tools,
+  });
+}
+
 export async function POST(request: NextRequest) {
-  let requestId: number | string = 0;
+  const requestId: number | string = 0;
 
   try {
     const body = await request.json();
@@ -23,11 +38,7 @@ export async function POST(request: NextRequest) {
 
       case 'tools/list':
         result = {
-          tools: [
-            { name: 'get_all', description: 'Get all items', inputSchema: { type: 'object', properties: {} } },
-            { name: 'get_by_id', description: 'Get item by ID', inputSchema: { type: 'object', properties: { id: { type: 'string' } }, required: ['id'] } },
-            { name: 'search', description: 'Search items', inputSchema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } }
-          ]
+          tools
         };
         break;
 

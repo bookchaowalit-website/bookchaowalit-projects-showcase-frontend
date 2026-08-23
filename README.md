@@ -1,4 +1,10 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Projects Showcase
+
+A quiet, honest index of project studies in the Book Dev boundary. The surface
+uses an ikebana-inspired arrangement: choose a stem to focus a study, search
+the records, or open the read-only MCP catalog.
+
+The project index is sourced from `data/projects.json`.
 
 ## Getting Started
 
@@ -39,4 +45,3 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 - **Mobile App:** [bookchaowalit-projects-showcase-mobile](https://github.com/bookchaowalit-mobile/bookchaowalit-projects-showcase-mobile)
 - **Portfolio:** [bookchaowalit.com](https://bookchaowalit.com)
-

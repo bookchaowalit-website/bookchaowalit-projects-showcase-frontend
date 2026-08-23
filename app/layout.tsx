@@ -15,9 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Bookchaowalit - Bookchaowalit",
-  description: "Bookchaowalit by Bookchaowalit - A modern web application built with Next.js",
-  keywords: ['Bookchaowalit', 'Bookchaowalit', 'Next.js', 'React', 'TypeScript'],
+  title: "Projects Showcase | Bookchaowalit",
+  description: "A quiet, honest index of projects from the Book Dev boundary.",
+  keywords: ['projects showcase', 'Book Dev', 'MCP', 'Next.js', 'TypeScript'],
   authors: [{ name: 'Bookchaowalit', url: 'https://bookchaowalit.com' }],
   creator: 'Bookchaowalit',
   publisher: 'Bookchaowalit',
@@ -29,8 +29,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://bookchaowalit.com',
-    title: 'Bookchaowalit - Bookchaowalit',
-    description: 'Bookchaowalit by Bookchaowalit - A modern web application built with Next.js',
+    title: 'Projects Showcase | Bookchaowalit',
+    description: 'A quiet, honest index of projects from the Book Dev boundary.',
     siteName: 'Bookchaowalit',
     images: [
       {

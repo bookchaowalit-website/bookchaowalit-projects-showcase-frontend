@@ -1,70 +1,227 @@
-import { FolderOpen } from 'lucide-react';
+"use client";
+
+import Image from "next/image";
+import { useMemo, useState } from "react";
+import projectData from "../data/projects.json";
+
+type ProjectRecord = {
+  id: string;
+  name: string;
+  description: string;
+  tech: string[];
+  featured: boolean;
+};
+
+type ViewMode = "all" | "featured";
+
+const PROJECTS: ProjectRecord[] = projectData.projects;
+
+const PROJECT_IMAGES: Record<string, string> = {
+  "1": "/projects/portfolio-site.svg",
+  "2": "/projects/api-server.svg",
+};
+
+const MCP_TOOLS = [
+  { name: "get_all", description: "Return the complete project index." },
+  { name: "get_by_id", description: "Open one project record by id." },
+  { name: "search", description: "Find records by a text query." },
+];
 
 export default function Home() {
-  const tools = [
-    { name: 'get_all', description: 'Get all items', icon: FolderOpen, params: [] },
-    { name: 'get_by_id', description: 'Get item by ID', icon: FolderOpen, params: ['id (required)'] },
-    { name: 'search', description: 'Search items', icon: FolderOpen, params: ['query (required)'] }
-  ];
+  const [selectedId, setSelectedId] = useState(PROJECTS[0]?.id ?? "");
+  const [viewMode, setViewMode] = useState<ViewMode>("all");
+  const [query, setQuery] = useState("");
+  const [copyState, setCopyState] = useState("COPY ENDPOINT");
+
+  const filteredProjects = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+    return PROJECTS.filter((project) => {
+      const matchesView = viewMode === "all" || project.featured;
+      const matchesQuery =
+        normalizedQuery.length === 0 ||
+        `${project.name} ${project.description} ${project.tech.join(" ")}`.toLowerCase().includes(normalizedQuery);
+      return matchesView && matchesQuery;
+    });
+  }, [query, viewMode]);
+
+  const selectedProject = PROJECTS.find((project) => project.id === selectedId) ?? PROJECTS[0];
+
+  function selectProject(id: string) {
+    setSelectedId(id);
+    document.getElementById("selected-study")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  function selectView(nextView: ViewMode) {
+    setViewMode(nextView);
+    if (nextView === "featured") {
+      const firstFeatured = PROJECTS.find((project) => project.featured);
+      if (firstFeatured) setSelectedId(firstFeatured.id);
+    }
+  }
+
+  async function copyEndpoint() {
+    try {
+      await navigator.clipboard.writeText(`${window.location.origin}/api/mcp`);
+      setCopyState("COPIED");
+    } catch {
+      setCopyState("COPY FAILED");
+    }
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      <header className="border-b border-slate-700/50 backdrop-blur-sm">
-        <div className="container mx-auto px-6 py-6">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-blue-600">
-              <FolderOpen className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-white">Projects Showcase</h1>
-              <p className="text-sm text-slate-400">Portfolio Showcase</p>
-            </div>
-          </div>
+    <main className="showcase-page">
+      <header className="showcase-nav">
+        <a className="wordmark" href="#top" aria-label="Projects Showcase home">
+          BOOK / SHOWCASE
+        </a>
+        <div className="showcase-nav__context">
+          <span>BOOK DEV</span>
+          <span className="nav-rule" aria-hidden="true" />
+          <span>{PROJECTS.length} PROJECT STUDIES</span>
         </div>
+        <a className="nav-link" href="/api/mcp" target="_blank" rel="noreferrer">
+          MCP CATALOG <span aria-hidden="true">OPEN</span>
+        </a>
       </header>
 
-      <section className="container mx-auto px-6 py-16">
-        <div className="mx-auto max-w-4xl text-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-2">
-            <span className="h-2 w-2 animate-pulse rounded-full bg-blue-400"></span>
-            <span className="text-sm text-blue-300">MCP-Enabled Server</span>
+      <section className="showcase-hero" id="top" aria-labelledby="showcase-title">
+        <div className="showcase-hero__copy">
+          <h1 id="showcase-title">
+            A quiet index
+            <span>of built things.</span>
+          </h1>
+          <p className="showcase-hero__dek">
+            A small, honest arrangement of projects from the Book Dev boundary. Choose a stem to inspect the work behind it.
+          </p>
+        </div>
+        <aside className="showcase-hero__note">
+          <p className="note-label">PUBLIC ARRANGEMENT</p>
+          <p>Projects are shown as working studies, not a promise of production SaaS.</p>
+          <a href="#arrangement" className="text-link">ENTER THE ARRANGEMENT</a>
+        </aside>
+      </section>
+
+      <section className="arrangement-section" id="arrangement" aria-labelledby="arrangement-title">
+        <div className="section-lead">
+          <div>
+            <p className="note-label">THE COLLECTION</p>
+            <h2 id="arrangement-title">Project arrangement</h2>
           </div>
-          <h2 className="mb-6 text-5xl font-bold text-white">Projects Showcase</h2>
-          <p className="mb-8 text-lg text-slate-300">Your comprehensive Projects Showcase with MCP integration.</p>
-          <a href="/api/mcp" className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-3 font-medium text-white transition-all hover:from-blue-600 hover:to-blue-700">
-            <FolderOpen className="h-4 w-4" /> MCP Endpoint
-          </a>
+          <p className="section-lead__count">{filteredProjects.length} / {PROJECTS.length} visible</p>
         </div>
-      </section>
 
-      <section className="container mx-auto px-6 pb-20">
-        <div className="mb-10 text-center">
-          <h3 className="mb-4 text-3xl font-bold text-white">Available MCP Tools</h3>
-        </div>
-        <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-3">
-          {tools.map((tool) => {
-            const Icon = tool.icon;
-            return (
-              <div key={tool.name} className="rounded-xl border border-slate-700/50 bg-slate-800/30 p-6 backdrop-blur-sm transition-all hover:border-blue-500/50 hover:bg-slate-800/50">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500/20 to-blue-600/20">
-                  <Icon className="h-6 w-6 text-blue-400" />
-                </div>
-                <h4 className="mb-2 font-semibold text-white">{tool.name}</h4>
-                <p className="mb-4 text-sm text-slate-400">{tool.description}</p>
-                {tool.params.length > 0 && tool.params.map((param) => (
-                  <code key={param} className="block rounded bg-slate-900/50 px-2 py-1 text-xs text-blue-300">{param}</code>
-                ))}
+        <div className="arrangement">
+          <div className="arrangement__alcove" aria-label="Selectable project arrangement">
+            <div className="alcove-surface" aria-hidden="true" />
+            <div className="branch branch--main" aria-hidden="true" />
+            <div className="branch branch--twig" aria-hidden="true" />
+            <div className="vessel" aria-hidden="true">
+              <span>BOOK DEV</span>
+              <strong>WORKS</strong>
+            </div>
+            <div className="ma-space" aria-hidden="true">MA / SPACE LEFT OPEN</div>
+
+            {filteredProjects.length > 0 ? (
+              filteredProjects.map((project, index) => (
+                <button
+                  type="button"
+                  className={`stem stem--${index + 1} ${project.id === selectedProject?.id ? "is-selected" : ""}`}
+                  key={project.id}
+                  onClick={() => selectProject(project.id)}
+                  aria-pressed={project.id === selectedProject?.id}
+                  aria-label={`Select ${project.name}`}
+                >
+                  <span className="stem__line" aria-hidden="true" />
+                  <span className="stem__bloom" aria-hidden="true" />
+                  <span className="stem__label">
+                    <small>{String(index + 1).padStart(2, "0")}</small>
+                    <strong>{project.name}</strong>
+                  </span>
+                </button>
+              ))
+            ) : (
+              <p className="arrangement__empty">No project holds this view. Try another filter.</p>
+            )}
+          </div>
+
+          {selectedProject ? (
+            <article className="study-panel" id="selected-study" aria-live="polite">
+              <div className="study-panel__topline">
+                <span>SELECTED STUDY</span>
+                <span>{selectedProject.featured ? "FEATURED" : "SUPPORTING"}</span>
               </div>
-            );
-          })}
+              <div className="study-panel__image">
+                <Image
+                  src={PROJECT_IMAGES[selectedProject.id] ?? "/projects/portfolio-site.svg"}
+                  alt={`${selectedProject.name} visual study`}
+                  fill
+                  unoptimized
+                  loading="eager"
+                  sizes="(max-width: 760px) 100vw, 42vw"
+                />
+                <span className="study-panel__index">{selectedProject.id.padStart(2, "0")}</span>
+              </div>
+              <div className="study-panel__body">
+                <p className="note-label">{selectedProject.featured ? "FEATURED WORK" : "SERVICE STUDY"}</p>
+                <h3>{selectedProject.name}</h3>
+                <p className="study-panel__description">{selectedProject.description}</p>
+                <div className="study-panel__tech" aria-label="Technologies">
+                  {selectedProject.tech.map((technology) => <span key={technology}>{technology}</span>)}
+                </div>
+              </div>
+            </article>
+          ) : null}
         </div>
       </section>
 
-      <footer className="border-t border-slate-700/50">
-        <div className="container mx-auto px-6 py-8">
-          <p className="text-center text-sm text-slate-500">Part of the bookchaowalit portfolio ecosystem</p>
+      <section className="archive-section" aria-labelledby="archive-title">
+        <div className="archive-section__header">
+          <div>
+            <p className="note-label">ARRANGEMENT TOOLS</p>
+            <h2 id="archive-title">Find a project</h2>
+          </div>
+          <p>Search the records without leaving the room.</p>
         </div>
+        <div className="archive-controls">
+          <label className="search-field">
+            <span>SEARCH</span>
+            <input
+              type="search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Name, description, technology"
+            />
+          </label>
+          <div className="view-switch" aria-label="Project view">
+            <span>VIEW</span>
+            <button type="button" className={viewMode === "all" ? "is-active" : ""} onClick={() => selectView("all")} aria-pressed={viewMode === "all"}>ALL</button>
+            <button type="button" className={viewMode === "featured" ? "is-active" : ""} onClick={() => selectView("featured")} aria-pressed={viewMode === "featured"}>FEATURED</button>
+          </div>
+          <button type="button" className="endpoint-button" onClick={copyEndpoint}>{copyState}</button>
+        </div>
+      </section>
+
+      <section className="mcp-section" aria-labelledby="mcp-title">
+        <div className="mcp-section__intro">
+          <p className="note-label">MCP CATALOG</p>
+          <h2 id="mcp-title">The arrangement has a handle.</h2>
+          <p>Three read-only tools keep the collection discoverable for agents and people.</p>
+          <a className="text-link" href="/api/mcp" target="_blank" rel="noreferrer">OPEN JSON ENDPOINT</a>
+        </div>
+        <div className="mcp-tools">
+          {MCP_TOOLS.map((tool, index) => (
+            <div className="mcp-tool" key={tool.name}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <div><strong>{tool.name}</strong><p>{tool.description}</p></div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <footer className="showcase-footer">
+        <span>BOOKCHAOWALIT / PROJECTS SHOWCASE</span>
+        <span>LOCAL DATA · HONEST SCOPE · {PROJECTS.length} STUDIES</span>
       </footer>
-    </div>
+    </main>
   );
 }
